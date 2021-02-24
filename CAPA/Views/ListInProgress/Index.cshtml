@@ -1,0 +1,78 @@
+﻿@model CAPA.Models.Capa
+@{
+    ViewData["Title"] = "List in Progress CAPA";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 id="List" class="page-title">List in Progress CAPA</h4>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                <li>
+                    <a href="/ListInProgress">List in Progress</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="card-box">
+        <table id="tbl_ListCapa" style="font-size:12px;" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th width="10%">No. CAPA</th>
+                    <th width="15%">Sumber</th>
+                    <th width="45%">Masalah</th>
+                    <th width="15%">Tgl. Pengajuan</th>
+                    <th width="10%">Initiator</th>
+                    <th width="5%"><center>#</center></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+@section tambahan_js {
+    <script>
+        var tbl_ListCapa = $("#tbl_ListCapa").DataTable({
+            "processing": true, // A boolean property that when enables shows the processing indicator when the table is being processed.
+            "serverSide": true, // This property enables server-side processing
+            "filter": true, // enables/disables the search bar.
+            "ajax": { //used to fetch the data from external sources, in our case, API
+                "url": "/Capa/GetList",
+                "type": "POST",
+                "datatype": "json"
+            },
+            "columnDefs": [{
+                //Here we can define the properties of each column like visibility, isSearchable, and so on.
+                //Remember, the first column is Id? Let’s hide it from the Datatable and not include it in the search.
+                "targets": [0],
+                "visible": true,
+                "searchable": true,
+            }],
+            "columnDefs": [{
+                "targets": 3,
+                "render": function (data) {
+                    return moment(data).format('D-MMM-YYYY HH:mm');
+                }
+            }],            
+        "columns": [
+            //It is important to use camelCasing while defining the names of the variables.displayName will work.
+            //But DisplayName won’t.Quite weird, but that’s how js works.Make sure you follow camelCasing standard while working with js scripts
+            { "data": "capa_no", "name": "capa_no"},
+            { "data": "source", "name": "source"},
+            { "data": "problem", "name": "problem" },
+            { "data": "initiation_date", "name": "initiation_date"},
+            { "data": "initiator_name", "name": "initiator_name"},
+            {
+                "sortable": false,
+                "render": function (data, type, row) {
+                    return "<a target='_blank' href='/ListInProgress/GetData/" + row.capa_no + " ' class='btn btn-sm btn-info'>Detail</a>"
+                }
+            },
+        ]
+        });
+    </script>
+}

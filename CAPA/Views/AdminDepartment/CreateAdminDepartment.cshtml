@@ -1,0 +1,111 @@
+﻿@model CAPA.Models.AdminDepartment
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box">
+
+            <div class="well text-center" style="padding: 5px">
+                <label>
+                    Admin Department (Create Page)
+                </label>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 m-b-15">
+                    <a href="../AdminDepartment" class="btn btn-default btn-sm">
+                        <i class="fa fa-backward" aria-hidden="true"></i> Back
+                    </a>
+                </div>
+            </div>
+
+            <form id="frmCreate">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Department</span>
+                                        <select id="id_department" name="id_department" class="form-control" asp-items="@(new SelectList(ViewBag.ListOfDepartment, "id", "department_name"))" required></select>
+                                    </div>
+                                    <span id="Dep_validation" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Employee </span>
+                                        <select id="id_employee" name="id_employee" class="form-control" asp-items="@(new SelectList(ViewBag.ListOfEmployee, "id", "display_name"))" required></select>
+                                    </div>
+                                    <span id="Emp_validation" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="col-lg-12">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="is_active" name="is_active" value="1" checked>
+                                    <label class="form-check-label" for="exampleCheck1">Active</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-info col-lg-12" id="btnSubmit">Simpan</button>
+                    </div>
+            </form>
+        </div><!--- div nya card-box --->
+    </div>
+</div>
+
+
+@section tambahan_js {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#id_department, #id_employee').select2();
+
+            $('#is_active').on('change', function () {
+                $('#is_active').val(this.checked ? 1 : 0);
+            });
+
+        })
+
+        $("#frmCreate").on("submit", function (e) {
+            e.preventDefault();
+            var dep = document.getElementById("id_department").value;
+            var emp = document.getElementById("id_employee").value;
+            if (dep == 0) {
+                document.getElementById("Dep_validation").innerHTML = "Department is required";
+            }
+            if (emp == 0) {
+                document.getElementById("Emp_validation").innerHTML = "Employee is required";
+            }
+            if ((dep != 0) && (emp != 0)) {
+                $.ajax({
+                    url: "@Url.Action("Create","AdminDepartment")",
+                    type: "POST",
+                    data: $(this).serialize(),
+                    success: function (result) {
+                        console.log(result);
+                        swal("Success Added", "Click ok to proceed", "success");
+                        location.replace("../AdminDepartment");
+                    },
+                    error: function (data, err) {
+                        console.log('my message' + err);
+                        swal({
+                            title: "Error",
+                            text: result.message,
+                            type: "error"
+                        });
+                    }
+                });
+            }
+
+
+        });
+
+
+    </script>
+}

@@ -1,0 +1,110 @@
+﻿@using CAPA.Models
+@model CAPA.Models.AdminDepartment
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box">
+
+            <div class="well text-center" style="padding: 5px">
+                <label>
+                    Admin Department (Edit Page)
+                </label>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 m-b-15">
+                    <a href="../../AdminDepartment" class="btn btn-default btn-sm">
+                        <i class="fa fa-backward" aria-hidden="true"></i> Back
+                    </a>
+                </div>
+            </div>
+
+            <form id="frmCreateEdit">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Department</span>
+                                        <input name="id" type="hidden" id="id" value="@Model.id" />
+                                        <select id="id_department" asp-for="id_department" name="id_department" class="form-control" asp-items="@(new SelectList(ViewBag.ListOfDepartment, "id", "department_name"))"></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Employee </span>
+                                        <select id="id_employee" asp-for="id_employee" name="id_employee" class="form-control" asp-items="@(new SelectList(ViewBag.ListOfEmployee, "id", "display_name"))"></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="col-lg-12">
+                                <div class="form-check">
+                                    @{
+                                        if (Model.is_active == 1)
+                                        {
+                                            <input type="checkbox" class="form-check-input" value="1" id="is_active" name="is_active" checked>
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" class="form-check-input" value="0" id="is_active" name="is_active">
+                                        }
+                                    }
+
+                                    <label class="form-check-label" for="is_active">Active</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-info col-lg-12" id="btnSubmit">Simpan</button>
+                    </div>
+            </form>
+        </div><!--- div nya card-box --->
+    </div>
+</div>
+
+@section tambahan_js {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#id_department, #id_employee').select2();
+
+            $('#is_active').on('change', function () {
+                $('#is_active').val(this.checked ? 1 : 0);
+            });
+
+        })
+
+        $("#frmCreateEdit").on("submit", function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: "@Url.Action("Edit","AdminDepartment")",
+                type: "POST",
+                data: $(this).serialize(),
+                success: function (result) {
+                    console.log(result);
+                    swal("Edited", "Click ok to proceed", "success");
+                    location.replace("../../AdminDepartment");
+                },
+                error: function (data, err) {
+                    console.log('my message' + err);
+                    swal({
+                        title: "Error",
+                        text: result.message,
+                        type: "error"
+                    });
+                }
+            });
+        });
+
+    </script>
+}

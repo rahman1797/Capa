@@ -1,0 +1,125 @@
+﻿@model CAPA.Models.Admin
+
+<div class="row">
+    <div class="col-sm-12">
+        <h4 class="page-title">Create Admin</h4>
+        <ol class="breadcrumb">
+            <li>
+                <a href="">Home</a>
+            </li>
+            <li>
+                <a href="Index">Admin</a>
+            </li>
+            <li class="active">
+                Create Admin
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box">
+            <form method="post" asp-action="Create" id="formID">
+                <div class="border p-3">
+                    <div class="form-group"> 
+                        <a asp-action="Index" class="btn btn-warning waves-effect waves-light w-xs">
+                            <span class="btn-label">
+                                <i class="fa fa-arrow-left"></i>
+                            </span>Back
+                        </a>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group row">
+                                <div class="col-9">
+                                    <label asp-for="id_employee">Admin</label>
+                                    <select asp-for="id_employee" class="form-control" asp-items="ViewBag.IDEmployee">
+                                        >
+                                        <option value="">Please Select</option>
+                                    </select> 
+                                    <span asp-validation-for="id_employee" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-9">
+                                    <label asp-for="id_rule">Rule</label>
+                                    <select asp-for="id_rule" id="id_rule" class="form-control" asp-items="ViewBag.IDRule">
+                                        >
+                                        <option value="">Please Select</option>
+                                    </select>
+                                    <span asp-validation-for="id_rule" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-9">
+                                    <label asp-for="id_employee_spv">Super Admin</label>
+                                    <select asp-for="id_employee_spv" id="id_employee_spv"class="form-control" asp-items="ViewBag.IDEmployee">
+                                        >
+                                        <option value="0">Please Select</option>
+                                    </select>
+                                    <span asp-validation-for="id_employee_spv" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-9">
+                                    <label asp-for="description">Description</label>
+                                    <textarea asp-for="description" class="form-control"></textarea>
+                                    <span asp-validation-for="description" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <!-- <div class="form-group row" hidden>
+                                <div class="col-sm-4">
+                                    <input asp-for="created_at" class="form-control" value="@DateTime.Now.ToString("dd-MMMM-yyyy H:m")" />
+                                </div>
+                            </div>
+
+                            <div class="form-group row" hidden>
+                                <div class="col-sm-4">
+                                    <input asp-for="updated_at" class="form-control" />
+                                </div>
+                                <br />
+                            </div>
+
+                                                    <div class="form-group row" hidden>
+                                                        <div class="col-sm-4">
+                                                            <input asp-for="updated_by" class="form-control" value="amir" />
+                                                        </div>
+                                                    </div>-->
+
+                            <div class="form-group">
+                                <div class="col-sm-offset-5 col-sm-2 m-t-15">
+                                    <button type="submit" class="btn btn-primary w-lg" value="create">
+                                        Submit
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section tambahan_js{
+@{
+        <partial name="_ValidationScriptsPartial" /> }
+<script type="text/javascript">
+     /*$(function () {
+        $('#formID').validate();
+
+        if ($('#id_rule') === 1 && $('#id_employee_spv') === 0) {
+            console.log("invalid");
+        } else {
+            console.log("valid!");
+        }
+    }); */
+</script>
+}

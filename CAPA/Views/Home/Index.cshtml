@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@using Microsoft.AspNetCore.Identity
+@using CAPA.Areas.Identity.Data
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<div>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <h3>Authentication</h3>
+        <h5>Email: <b>@UserManager.GetUserAsync(User).Result.Email</b></h5>
+        <h5>First Name: <b>@UserManager.GetUserAsync(User).Result.FirstName</b></h5>
+        <h5>Last Name: <b>@UserManager.GetUserAsync(User).Result.LastName</b></h5>
+    }
+</div>

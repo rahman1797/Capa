@@ -1,0 +1,521 @@
+@{
+    ViewData["Title"] = "Capa Number "+@ViewBag.LIP;
+}
+
+@model CAPA.ViewModel.MyViewModel
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="page-title">List in Progress CAPA</h4>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                <li>
+                    <a href="/ListInProgress">List in Progress</a>
+                </li>
+                <li>
+                    CAPA Number
+                </li>
+                <li class="active">
+                    @ViewBag.LIP
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a style="color: white;" class="colpsible-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                        <i class="fa fa-book"></i> Problem / Potential Problem
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse in">
+                <div style="background-color: #f1eff1;">
+                    <a href="#" class="btn btn-primary-outline btn-sm">
+                        <span style="font-size: 20px;" class="glyphicon glyphicon-print"></span> To ODS
+                    </a>
+                </div>
+                <div class="panel-body">
+                    @if (Model.Capas != null)
+                    {
+                    <table style="font-size:12px;" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th width="10%">Nomor CAPA</th>
+                                <th width="15%">Pengajuan O/</th>
+                                <th width="20%">Sumber</th>
+                                <th width="50%">Masalah</th>
+                                <th width="5%">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 1; i <= Model.Capas.Count; i++)
+                            {
+                                <tr>
+                                    <td>@Model.Capas[i - 1].capa_no</td>
+                                    <td>@Model.InitiatorCapa[i - 1].display_name @Model.Capas[i - 1].initiation_date.ToString("(dd MMM yyyy)")</td>
+                                    <td>@Model.Capas[i - 1].source</td>
+                                    <td>@Model.Capas[i - 1].problem</td>
+                                    <td>@Model.Capas[i - 1].status</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a style="color: white;" class="colpsible-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                        <i class="fa fa-book"></i> Related Work Units
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse">
+                <div class="row" style="background-color: #f1eff1;">
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-plus-sign"></span> Append
+                        </a>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-minus-sign"></span> Delete
+                        </a>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-floppy-disk"></span> Save
+                        </a>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-circle-arrow-left"></span> Undo
+                        </a>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-refresh"></span> Refresh
+                        </a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    @if (Model.Related_Work_Units != null)
+                    {
+                    <table style="font-size:12px;" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th width="5%"></th>
+                                <th width="15%">Bagian</th>
+                                <th width="20%">Email</th>
+                                <th width="20%">Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for(int i = 1; i <= Model.Related_Work_Units.Count; i++)
+                                {
+                            <tr>
+                                <td>@i</td>
+                                <td>@Model.Departments[i-1].department_name</td>
+                                <td>@Model.Employees[i-1].email</td>
+                                <td>@Model.Related_Work_Units[i-1].rule</td>
+                            </tr>
+                                }
+                        </tbody>
+                    </table>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a style="color: white;" class="colpsible-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                        <i class="fa fa-book"></i> Correction (filled in when it happened)
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseThree" class="panel-collapse collapse">
+                <div class="row" style="background-color: #f1eff1;">
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-plus-sign"></span> Append
+                        </a>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-minus-sign"></span> Delete
+                        </a>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-floppy-disk"></span> Save
+                        </a>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-circle-arrow-left"></span> Undo
+                        </a>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-refresh"></span> Refresh
+                        </a>
+                    </div>
+                </div>
+                <div class="panel-body">
+
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a style="color: white;" class="colpsible-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+                        <i class="fa fa-book"></i> Root Cause
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseFour" class="panel-collapse collapse">
+                <div class="row" style="background-color: #f1eff1;">
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-plus-sign"></span> Append
+                        </a>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-minus-sign"></span> Delete
+                        </a>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-floppy-disk"></span> Save
+                        </a>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-circle-arrow-left"></span> Undo
+                        </a>
+                    </div>
+                    <div id="Check" class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-refresh"></span> Refresh
+                        </a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    @if (Model.RootCauses != null)
+                    {
+                    <table style="font-size:12px;" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th width="40%">Root Cause</th>
+                                <th width="20%">Created At</th>
+                                <th width="20%">Updated At</th>
+                                <th width="20%">Updated By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.RootCauses)
+                                {
+                            <tr>
+                                <td>@item.root_cause</td>
+                                <td>@item.created_at.ToString("dd MMM yyyy")</td>
+                                <td>@item.updated_at.ToString("dd MMM yyyy")</td>
+                                <td>@item.updated_by</td>
+                            </tr>
+                                }
+                        </tbody>
+                    </table>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a style="color: white;" class="colpsible-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseFive">
+                        <i class="fa fa-book"></i> Corrective / Preventive Action
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseFive" class="panel-collapse collapse">
+                <div class="row" style="background-color: #f1eff1;">
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-plus-sign"></span> Append
+                        </a>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-minus-sign"></span> Delete
+                        </a>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-floppy-disk"></span> Save
+                        </a>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-circle-arrow-left"></span> Undo
+                        </a>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-refresh"></span> Refresh
+                        </a>
+                    </div>
+                </div>
+                @if (Model.Correction_Actions != null)
+                {
+                <table style="font-size:12px;" class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th width="40%">Correction</th>
+                            <th width="20%">PIC</th>
+                            <th width="20%">Deadline</th>
+                            <th width="20%">Realization</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Correction_Actions)
+                            {
+                        <tr>
+                            <td>@item.correction</td>
+                            <td>@item.pic</td>
+                            <td>@item.deadline.ToString("dd MMM yyyy")</td>
+                            <td>@item.realization.ToString("dd MMM yyyy")</td>
+                        </tr>
+                            }
+                    </tbody>
+                </table>
+                }
+            </div>
+        </div>
+        <div class="panel panel-purple">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a style="color: white;" class="colpsible-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseSix">
+                        <i class="fa fa-book"></i> Verification
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseSix" class="panel-collapse collapse">
+                <div class="row" style="background-color: #f1eff1;">
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-plus-sign"></span> Append
+                        </a>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-minus-sign"></span> Delete
+                        </a>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-floppy-disk"></span> Save
+                        </a>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-circle-arrow-left"></span> Undo
+                        </a>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" class="btn btn-primary-outline btn-sm">
+                            <span style="font-size: 20px;" class="glyphicon glyphicon-refresh"></span> Refresh
+                        </a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    @if (Model.Verifications != null)
+                    {
+                    <table style="font-size:12px;" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th width="15%">Verification</th>
+                                <th width="20%">Created At</th>
+                                <th width="20%">Updated At</th>
+                                <th width="20%">Updated By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Verifications.Count; i++)
+                                {
+                            <tr>
+                                <td>@Model.Verifications[i].verification</td>
+                                <td>@Model.Verifications[i].created_at.ToString("dd MMM yyyy")</td>
+                                <td>@Model.Verifications[i].updated_at.ToString("dd MMM yyyy")</td>
+                                <td>@Model.Verifications[i].updated_by</td>
+                            </tr>
+                                }
+                        </tbody>
+                    </table>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a style="color: white;" class="colpsible-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven">
+                        <i class="fa fa-book"></i> Administration
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseSeven" class="panel-collapse collapse">
+                <div class="row" style="background-color: #f1eff1;">
+                    <ul style="margin-left: 10px;" class="nav nav-tabs">
+                        <li class="active"><a href="#kirim" data-toggle="tab">Kirim Pesan</a></li>
+                        <li><a href="#log" data-toggle="tab">Log Pesan</a></li>
+                        <li style="margin-left:9px;"><a href="#lampiran" data-toggle="tab">Lampiran</a></li>
+                    </ul>
+                </div>
+                <div class="tabbable">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="kirim">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div style="background-color: #f1eff1;">
+                                        <a href="#" class="btn btn-primary-outline btn-sm">
+                                            <span style="font-size: 20px;" class="glyphicon glyphicon-refresh"></span> Refresh
+                                        </a>
+                                    </div>
+                                    <div class="panel-body">
+                                        @if (Model.Related_Work_Units != null)
+                                            {
+                                        <table style="font-size:12px;" class="table table-striped table-bordered" id="tbl_Barang">
+                                            <thead>
+                                                <tr>
+                                                    <th width="5%"></th>
+                                                    <th width="5%"><center><input type="checkbox" onchange="" id="checkAll" name="cbDelete"></center></th>
+                                                    <th width="40%">Alamat Email</th>
+                                                    <th width="25%">Sebagai</th>
+                                                    <th width="25%">Bagian</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (int i = 1; i <= Model.Related_Work_Units.Count; i++)
+                                                        {
+                                                <tr>
+                                                    <td>@i</td>
+                                                    <td><center><input type="checkbox" name="cbDelete"></center></td>
+                                                    <td>@Model.Employees[i - 1].email</td>
+                                                    <td>@Model.Related_Work_Units[i - 1].rule</td>
+                                                    <td>@Model.Departments[i - 1].department_name</td>
+                                                </tr>
+                                                        }
+                                            </tbody>
+                                        </table>
+                                            }
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div>
+                                        <a>
+                                            <span style="font-size: 30px; opacity:0%" class="glyphicon glyphicon-refresh"></span>
+                                        </a>
+                                    </div>
+                                    <form action="#" method="post">
+                                        <label style="font-size:12px;">Pesan:</label></br>
+                                        <textarea rows="6" cols="50"></textarea><br />
+                                        <input type="submit" value="Send" class="btn btn-primary">
+                                    </form><br /><br />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="log">
+                            <div>
+                                <div style="background-color: #f1eff1;">
+                                    <a href="#" class="btn btn-primary-outline btn-sm">
+                                        <span style="font-size: 20px;" class="glyphicon glyphicon-refresh"></span> Refresh
+                                    </a>
+                                </div>
+                                <div class="panel-body">
+                                    <table style="font-size:12px;" class="table table-striped table-bordered" id="tbl_Barang">
+                                        <thead>
+                                            <tr>
+                                                <th width="5%"></th>
+                                                <th width="15%">Tanggal</th>
+                                                <th width="15%">Dari</th>
+                                                <th width="15%" ">Kepada</th>
+                                                <th width="50%">Pesan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @for (int i = 1; i <= Model.Email_Logs.Count; i++)
+                                                {
+                                            <tr>
+                                                <td>@i</td>
+                                                <td>@Model.Email_Logs[i - 1].created_at.ToShortDateString()</td>
+                                                <td>@Model.Email_Logs[i - 1].email_from</td>
+                                                <td>@Model.Email_Logs[i - 1].email_to</td>
+                                                <td>@Model.Email_Logs[i - 1].contents</td>
+                                            </tr>
+                                                }
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="lampiran">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div>
+                                        <a>
+                                            <span style="font-size: 30px; opacity:0%" class="glyphicon glyphicon-refresh"></span>
+                                        </a>
+                                    </div>
+                                    <form style="padding: 10px;" action="#" enctype=multipart/form-data method="post">
+                                        <label style="font-size:12px;">File:</label></br>
+                                        <input type="file" class="form-control" />
+                                        <label style="font-size:12px;">Deskripsi File:</label></br>
+                                        <textarea class="form-control" rows="5" cols="40"></textarea><br />
+                                        <input type="submit" value="Send" class=" btn btn-primary">
+                                    </form><br /><br />
+                                </div>
+                                <div class="col-sm-8">
+                                    <div style="background-color: #f1eff1;">
+                                        <a href="#" class="btn btn-primary-outline btn-sm">
+                                            <span style="font-size: 20px;" class="glyphicon glyphicon-refresh"></span> Refresh
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <table style="font-size:12px;" class="table table-striped table-bordered" id="tbl_Barang">
+                                            <thead>
+                                                <tr>
+                                                    <th>name_file</th>
+                                                    <th>description_file</th>
+                                                    <th>updated_by</th>
+                                                    <th>updated</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> <!-- end container -->
+
+<script>
+    $(".tabbable").on("click", ".tab-link", function () {
+        $('.nav-tabs li a[href="' + $(this).attr('href') + '"]').trigger('click');
+    });
+</script>

@@ -1,0 +1,93 @@
+﻿@model CAPA.Models.Category
+
+@{
+    ViewData["Title"] = "Edit Kategori";
+}
+
+<style>
+    textarea {
+        resize: vertical;
+    }
+</style>
+
+<div class="row">
+    <div class="col-sm-12">
+        <h4 class="page-title">Edit Kategori</h4>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)">Master Data</a>
+            </li>
+            <li class="active">
+                <a href="@Url.Action("Index", "Category")">Kelola Kategori</a>
+            </li>
+            <li class="active">
+                Edit Kategori
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="id" />
+                <div class="form-group">
+                    <label asp-for="category_name">Nama Kategori</label>
+                    <input asp-for="category_name" type="text" class="form-control" id="category_name">
+                </div>
+                <div class="form-group">
+                    <label asp-for="description">Description</label>
+                    <textarea asp-for="description" class="form-control" rows="5" resize="vertical"></textarea>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        @{ if (Model.is_active == 1)
+                            {
+                                <input type="checkbox" class="custom-control-input" id="is_active" name="is_active" checked> }
+                            else
+                            {
+                                <input type="checkbox" class="custom-control-input" id="is_active" name="is_active">
+                            }
+                        }
+                        <label class="custom-control-label" for="is_active">Aktif</label>
+                    </div>
+                </div>
+                <a href="@Url.Action("Index", "Category")" class="btn btn-danger"><i class="fa fa-arrow-circle-left"></i> Kembali</a>
+                <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Simpan</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section tambahan_js {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            setIsActive();
+
+            var failed = @((TempData["Failed"] != null).ToString().ToLower());
+
+            if (failed == true) {
+                setTimeout(function () {
+                    swal({ title: 'Gagal Edit!', text: '@TempData["Failed"]', type: 'warning', confirmButtonText: 'OK' });
+                }, 500);
+            }
+            $('#is_active').on('change', function () {
+                setIsActive();
+            });
+        });
+
+        function setIsActive() {
+            if ($('#is_active').prop("checked") == true) {
+                $('#is_active').val(1);
+            } else {
+                $('#is_active').val(0);
+            }
+        }
+    </script>
+}

@@ -1,0 +1,68 @@
+﻿@model CAPA.Models.Department
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box">
+            <form method="post" asp-action="Edit">
+                <div class="row">
+                    <div class="form-group row">
+                        <div class="col-md-1">
+                            <a asp-action="Index" class="form-control btn btn-warning"><i class="fa fa-arrow-left"></i> Back</a>
+                        </div>
+                    </div>
+                    <label asp-for="id"></label>
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <input asp-for="id" class="form-control" readonly />
+                        </div>
+                    </div>
+                    <div class="form-group row" style="margin-bottom:0px;">
+                        <div class="col-md-12">
+                            <label asp-for="department_name"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <input asp-for="department_name" class="form-control" />
+                            <span asp-validation-for="department_name" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <label asp-for="is_active"></label>
+                    <div class="form-group row">
+                        <div class="col-md-1 text-center">
+                            <input onclick="checkCheckBox()" type="checkbox" id="vCheckBox" @ViewBag.is_checked>
+                        </div>
+                    </div>
+                    <input asp-for="created_at" class="hidden" />
+                    <input asp-for="is_active" class="hidden" Value=0 id="id_checkbox" />
+                    <div class="form-group row">
+                        <div class="col-md-1 col-md-offset-4">
+                            <input type="submit" class="form-control btn btn-primary btn-block" value="Edit" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section tambahan_js{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script>
+        $(document).ready(function () {
+            var x = document.getElementById("vCheckBox").checked;
+            if (x) $('#id_checkbox').val(1);
+        });
+
+        function checkCheckBox() {
+            var x = document.getElementById("vCheckBox").checked;
+            if (x) $('#id_checkbox').val(1);
+            else $('#id_checkbox').val(0); 
+        }
+    </script>
+
+}
+

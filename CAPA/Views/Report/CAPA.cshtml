@@ -1,0 +1,233 @@
+﻿@model IEnumerable<CAPA.Models.Category>
+
+@{
+    ViewData["Title"] = "Laporan CAPA";
+}
+
+<style>
+    table.dataTable thead > tr > th.th-number {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+</style>
+
+<div class="row">
+    <div class="col-sm-12">
+        <h4 class="page-title">Laporan CAPA</h4>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)">Laporan</a>
+            </li>
+            <li class="active">
+                Laporan CAPA
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                            <i class="fa fa-filter"></i> Filter Data
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <form class="form-horizontal" action="@Url.Action("ExportExcelCAPA", "Report")" method="POST" id="formReportCapa">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="filter_initiator" class="col-sm-3 control-label">Initiator</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" id="filter_initiator" name="filter_initiator">
+                                                <option value="">-- Pilih Initiator --</option>
+                                                @foreach (var initiator in @ViewBag.initiators)
+                                                {
+                                                    <option value="@initiator.id">@initiator.display_name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="filter_initiation_date" class="col-sm-3 control-label">Tgl. Pengajuan</label>
+                                        <div class="col-sm-9">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
+                                                <input type="text" class="form-control" id="filter_initiation_date" name="filter_initiation_date">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="filter_category" class="col-sm-3 control-label">Kategori</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" id="filter_category" name="filter_category">
+                                                <option value="">-- Pilih Kategori --</option>
+                                                @foreach (var category in @ViewBag.categories)
+                                                {
+                                                    <option value="@category.id">@category.category_name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="filter_source" class="col-sm-3 control-label">Sumber</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="filter_source" name="filter_source">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-3 col-sm-9">
+                                            <button type="button" class="btn btn-md btn-primary waves-effect waves-light m-r-5" id="btnFilter"><i class="fa fa-search"></i> Search</button>
+                                            <button type="button" class="btn btn-md btn-danger waves-effect waves-light m-r-5" id="btnResetFilter"><i class="fa fa-refresh"></i> Reset</button>
+                                            <button type="submit" class="btn btn-md btn-default waves-effect waves-light" id="btnExportExcel">
+                                                <i class="fa fa-download"></i> Export to Excel
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-box">
+            <div class="table-responsive">
+                <table class="table table-hover m-0 table-centered w-100" id="category-table">
+                    <thead>
+                        <tr>
+                            <th class="text-center th-number">#</th>
+                            <th>No. CAPA</th>
+                            <th>Sumber</th>
+                            <th>Masalah</th>
+                            <th class="text-center">Tgl. Pengajuan</th>
+                            <th class="text-center">Initiator</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section tambahan_js {
+    <script type="text/javascript">
+        let datatableCapa;
+
+        $(document).ready(function () {
+            var message = @((TempData["Message"] != null).ToString().ToLower());
+
+            if (message == true) {
+                setTimeout(function () {
+                    swal({ title: 'Sukses!', text: '@TempData["Message"]', type: 'success', confirmButtonText: 'OK' });
+                }, 500);
+            }
+
+            $('#filter_initiation_date').daterangepicker({
+                autoUpdateInput: false,
+                locale: {
+                    format: 'DD/MM/YYYY'
+                }
+            });
+
+            $('#filter_initiation_date').on('apply.daterangepicker', function (ev, picker) {
+                $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+            });
+
+            $('#filter_initiator').select2({
+                width: '100%',
+                placeholder: '-- Pilih Initiator --'
+            });
+
+            $('#filter_category').select2({
+                width: '100%',
+                placeholder: '-- Pilih Kategori --'
+            });
+
+
+            $('#modalCreateCategory').on('hide.bs.modal', function (event) {
+                $('#formAddCategory').trigger("reset");
+            });
+
+            $('#btnResetFilter').on('click', function (e) {
+                $('#filter_initiator').val(null).trigger("change");
+                $('#filter_initiation_date').val("");
+                $('#filter_category').val(null).trigger("change");
+                $('#filter_source').val("");
+                datatableCapa.ajax.reload();
+            });
+
+            datatableCapa = $("#category-table").DataTable({
+                "ajax": {
+                    "url": '@Url.Action("GetDatatableCapa", "Report")',
+                    "type": "POST",
+                    "datatype": "JSON",
+                    "data": function (data) {
+                        data.filter_initiator = $('#filter_initiator').val();
+                        data.filter_initiation_date = $('#filter_initiation_date').val();
+                        data.filter_category = $('#filter_category').val();
+                        data.filter_source = $('#filter_source').val();
+
+                    }
+                },
+                "columnDefs": [
+                    {
+                        "render": function (data, type, full, meta) {
+                            return '<div class="text-wrap">' + data + '</div>';
+                        },
+                        "targets": 3
+                    },
+                    {
+                        "targets": 4,
+                        "render": function (data) {
+                            return moment(data).format('YYYY-MM-DD HH:mm');
+                        },
+                    }
+                ],
+                "order": [[4, "asc"]],
+                "columns": [
+                    { "data": null, "orderable": false, "searchable": false, "sClass": "text-center", "width": "7%" },
+                    { "data": "capa_no", "name": "capa_no", "width": "10%" },
+                    { "data": "source", "name": "source", "width": "16%" },
+                    { "data": "problem", "name": "problem" },
+                    { "ata": "initiation_date", "name": "initiation_date", "sClass": "text-center", "width": "14%" },
+                    { "data": "initiator_name", "name": "initiator_name" }
+                ],
+                "serverSide": "true",
+                "processing": "true",
+                "language": {
+                    "processing": "processing..."
+                }
+            });
+
+            datatableCapa.on('draw.dt', function () {
+                var PageInfo = $('#category-table').DataTable().page.info();
+                datatableCapa.column(0, { page: 'current' }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1 + PageInfo.start;
+                });
+            });
+
+            $('#btnFilter').on('click', function (e) {
+                datatableCapa.ajax.reload();
+            });
+        });
+    </script>
+
+}

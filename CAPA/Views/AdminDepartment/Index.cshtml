@@ -1,0 +1,144 @@
+﻿@model CAPA.Models.AdminDepartment
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box">
+
+            <div class="well text-center" style="padding: 5px">
+                <label>
+                    Admin Department
+                </label>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 m-b-15">
+                    <a href="AdminDepartment/CreatePage" class="btn btn-success btn-sm" title="Add New">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Add New
+                    </a>
+                </div>
+            </div>
+
+            <table class="table table-striped table-responsive" id="tbl_AdminDepartment">
+                <thead>
+                    <tr>
+                        <th>Department</th>
+                        <th>Employee</th>
+                        <th>Is Active</th>
+                        <th>Update At</th>
+                        <th>Update by</th>
+                        <th>#</th>
+                    </tr>
+                </thead>
+            </table>
+        </div><!--- div nya card-box --->
+    </div>
+</div>
+
+
+@section tambahan_js {
+    <script type="text/javascript">
+
+        var tbl_AdminDepartment =  $("#tbl_AdminDepartment").DataTable({
+            "processing": true, // A boolean property that when enables shows the processing indicator when the table is being processed.
+            "serverSide": true, // This property enables server-side processing
+            "filter": true, // enables/disables the search bar.
+            "ajax": { //used to fetch the data from external sources, in our case, API
+                "url": "/AdminDepartment/GetAdminDepartment",
+                "type": "POST",
+                "datatype": "json"
+            },
+            "columnDefs": [{
+                //Here we can define the properties of each column like visibility, isSearchable, and so on.
+                //Remember, the first column is Id? Let’s hide it from the Datatable and not include it in the search.
+                "targets": [0],
+                "visible": true,
+                "searchable": true,
+            }],
+            "columnDefs": [{
+                "targets": 3,
+                "render": function (data) {
+                    return moment(data).format('D-MMM-YYYY HH:mm');
+                }
+            }],
+
+            "columns": [
+                //It is important to use camelCasing while defining the names of the variables.displayName will work.
+                //But DisplayName won’t.Quite weird, but that’s how js works.Make sure you follow camelCasing standard while working with js scripts
+                { "data": "id_department", "name": "id_department", "autoWidth": true },
+                { "data": "id_employee", "name": "id_employee", "autoWidth": true },
+                {
+                    "data": "is_active",
+                    "name": "is_active",
+                    "sClass": "text-center",
+                    "render": function (data, type, row) {
+                        if (data === 1) {
+                            return '<span class="badge bg-success" style="text-transform: none;">Aktif</span>';
+                        } else {
+                            return '<span class="badge bg-dark text-white" style="text-transform: none;">Tidak Aktif</span>';
+                        }
+                    }
+                },
+                { "data": "update_at", "name": "update_at", "autoWidth": true },
+                { "data": "update_by", "name": "update_by", "autoWidth": true },
+                {
+                    "sortable": false,
+                    "render": function (data, type, row) {
+                        return "<a href='AdminDepartment/EditPage/" + row.id + " ' class='btn btn-sm btn-info'>Edit</a>&nbsp;&nbsp;&nbsp;<button class='btn btn-sm btn-danger' onclick=deleteData('" + row.id + "'); >Delete</button>"
+                    }
+                },
+            ]
+        });
+
+        function deleteData(id)
+        {
+            swal({
+                title: "Anda yakin?",
+                text: "Hapus data ini",
+                showCancelButton: true,
+                cancelButtonColor: "#c0392b",
+                confirmButtonColor: "#c0392b",
+                confirmButtonText: "Ya",
+                cancelButtonText: 'Batal',
+                animation: true,
+                allowEscapeKey: true,
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true,
+                html: true
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            type: "POST",
+                            url: "@Url.Action("Delete","AdminDepartment")",
+                            data: {
+                                ID: id
+                            },
+                            traditional: true,
+                            success: function (result) {
+
+                                if (result == "Deleted") {
+                                    swal("Deleted", "Click ok to proceed", "success");
+                                    tbl_AdminDepartment.ajax.reload();
+                                } else {
+                                    swal({
+                                        title: "Something Wrong",
+                                        text: result.message,
+                                        type: "error"
+                                    });
+                                }
+                            },
+                            error: function (result) {
+                                swal({
+                                    title: "Error",
+                                    text: "Delete error",
+                                    type: "error"
+                                });
+                            }
+                        });
+                    }
+                });
+        }
+
+    </script>
+}
+

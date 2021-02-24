@@ -1,0 +1,176 @@
+﻿
+
+           
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card-box">
+
+                        <div class="well text-center" style="padding: 5px">
+                            <label>
+                                List Admin
+                            </label>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12 m-b-15">
+                                <a class="btn btn-primary btn-sm rounded-0" asp-controller="Admin" asp-action="Create" title="Add New Admin">
+                                    <i class="fa fa-plus" aria-hidden="true"></i> Add New
+                                </a>
+                            </div>
+                        </div>
+
+                        <table class="table table-striped table-responsive" id="tbl_admin">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center">Id</th>
+                                    <th style="text-align:center">Admin</th>
+                                    <th style="text-align:center">Super Admin</th>
+                                    <th style="text-align:center">Description</th>
+                                    <th style="text-align:center">Rule</th>
+                                    <th style="text-align:center">Is Active</th>
+                                    <th style="text-align:center">Created At</th>
+                                    <th style="text-align:center">Updated At </th>
+                                    <th style="text-align:center">Updated By</th>
+                                    <th style="text-align:center">#</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div><!--- div nya card-box --->
+                </div>
+            </div>
+
+            @section tambahan_js {
+                <script type="text/javascript">
+                    let dataTableEmployee;
+                    $(document).ready(function () {
+                        dataTableEmployee = $("#tbl_admin").DataTable({
+                            "processing": true, // A boolean property that when enables shows the processing indicator when the table is being processed.
+                            "serverSide": true, // This property enables server-side processing
+                            "filter": true, // enables/disables the search bar.
+                            "ajax": { //used to fetch the data from external sources, in our case, API
+                                "url": "/Admin/GetAdmins",
+                                "type": "POST",
+                                "datatype": "json"
+                            },
+                            "columnDefs": [{
+                                //Here we can define the properties of each column like visibility, isSearchable, and so on.
+                                //Remember, the first column is Id? Let’s hide it from the Datatable and not include it in the search.
+                                "targets": [0],
+                                "visible": false,
+                                "searchable": false
+                            },
+                            {
+                                "targets": [6],
+                                "render": function (data) {
+                                    return moment(data).format('DD-MMM-YYYY HH:mm');
+                                }
+                            },
+                            {
+                                "targets": [7],
+                                "render": function (data) {
+                                    return moment(data).format('DD-MMM-YYYY HH:mm');
+                                }
+                            }
+
+                            ],
+
+                            "columns": [
+                                //It is important to use camelCasing while defining the names of the variables.displayName will work.
+                                //But DisplayName won’t.Quite weird, but that’s how js works.Make sure you follow camelCasing standard while working with js scripts.
+                                { "data": "id", "name": "id", "autoWidth": true},
+                                { "data": "id_employee", "name": "id_employee", "autoWidth": true},
+                                { "data": "id_employee_spv", "name": "id_employee_spv", "autoWidth": false},
+                                { "data": "description", "name": "description", "autoWidth": true},
+                                { "data": "id_rule", "name": "id_rule", "sClass": "text-center", "autoWidth": true},
+                                {
+                                    "data": "is_active", "name": "is_active", "autoWidth": true,
+                                    "sClass": "text-center",
+                                    "render": function (data, type, row) {
+                                        if (data == 1) {
+                                            return'<span class ="badge bg-success" style="text-transform: none;">Active</span>'
+                                        }
+                                        else {
+                                            return '<span class="badge bg-warning" style="text-transform: none;">Not Active</span>'
+                                        }
+                                    }
+                                },
+                                { "data": "created_at", "name": "created_at", "sClass": "text-center", "autoWidth": true},
+                                { "data": "updated_at", "name": "updated_at", "sClass": "text-center", "autoWidth": true},
+                                { "data": "updated_by", "name": "updated_by", "sClass": "text-center", "autoWidth": true}, //onclick=EditAdmin();
+                                {
+                                    "sClass": "text-center",
+                                    "render": function (data, type, row) { return "<a href='/Admin/Edit?id=" + row.id + "'   class='btn btn-success btn-sm rounded-0'  ><i class='fa fa-edit'></i></a>&nbsp;&nbsp;&nbsp;<a href='#' class='btn btn-sm btn-danger' onclick=DeleteAdmin('" + row.id + "'); ><i class='fa fa-trash'></i></a>"; },
+                                    "sortable": false
+                                },
+                            ]
+                        });
+
+
+                    });
+
+                    function EditAdmint(id)
+                    {
+                        if(id == 0)
+                            url = "@Url.Action("Create","Admin")";
+                        else
+                            url = "@Url.Action("Edit","Admin")/" + id;
+
+                        $.ajax({
+                            url: url,
+                            type: "GET",
+                            success: function(data){
+                                $("#divModal").html(data);
+                            },
+                            error: function(data){
+                                alert('Hubungi Admin !');
+                            }
+                        });
+                    }
+
+                    function DeleteAdmin(id) {
+                        swal({
+                            title: "Delete Id " + id + " ?",
+                            text: "You will not be able to recover this record !",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonClass: 'btn-warning',
+                            confirmButtonText: "Yes, delete it!",
+                            closeOnConfirm: false
+                        }, function (isConfirm) {
+                                if (isConfirm) {
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "@Url.Action("Delete","Admin")",
+                                        data: {
+                                            id: id
+                                        },
+                                        traditional: true,
+                                        success: function (result) {
+                                            if (result.code == 200) {
+                                                swal(result.message, "Click ok to proceed", "success");
+                                                dataTableEmployee.ajax.reload();
+                                            } else {
+                                                swal({
+                                                    title: "Something Wrong",
+                                                    text: result.message,
+                                                    type: "error"
+                                                });
+                                            }
+                                        },
+                                        error: function (result) {
+                                            swal({
+                                                title: "Error",
+                                                text: result.message,
+                                                type: "error"
+                                            });
+                                        }
+                                    });
+                                }
+                        });
+                    }
+
+
+                </script>
+            }
+

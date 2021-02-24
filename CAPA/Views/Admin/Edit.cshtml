@@ -1,0 +1,123 @@
+﻿@model CAPA.Models.Admin
+
+<div class="row">
+    <div class="col-sm-12">
+        <h4 class="page-title">Update Admin</h4>
+        <ol class="breadcrumb">
+            <li>
+                <a href="">Home</a>
+            </li>
+            <li>
+                <a href="Index">Admin</a>
+            </li>
+            <li class="active">
+                Update Admin
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box">
+            <form method="post" asp-action="Edit">
+                <input asp-for="id" hidden />
+                <div class="border p-3">
+                    <div class="form-group">
+                        <button asp-action="Index" class="btn btn-warning waves-effect waves-light w-xs">
+                            <span class="btn-label">
+                                <i class="fa fa-arrow-left"></i>
+                            </span>Back
+                        </button>
+                    </div> 
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group row">
+                                <div class="col-9">
+                                    <label asp-for="id_employee">Admin</label>
+                                    <select asp-for="id_employee" class="form-control" asp-items="ViewBag.IDEmployee" value="id_employee">
+                                        >
+                                        <option value="">Please Select</option>
+                                    </select>
+                                    <span asp-validation-for="id_employee" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-9">
+                                    <label asp-for="id_rule">Rule</label>
+                                    <select asp-for="id_rule" class="form-control" asp-items="ViewBag.IDRule" value="id_rule">
+                                        >
+                                        <option value="">Please Select</option>
+                                    </select>
+                                    <span asp-validation-for="id_rule" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-9">
+                                    <label asp-for="id_employee_spv">Super Admin</label>
+                                    <select asp-for="id_employee_spv" class="form-control" asp-items="ViewBag.IDEmployee" value="id_employee_spv">
+                                        >
+                                        <option value="0">Please Select</option>
+                                    </select>
+                                    <span asp-validation-for="id_employee_spv" class="text-danger"></span>
+                                </div>
+                            </div>
+
+
+
+                            <div class="form-group row">
+                                <div class="col-9">
+                                    <label asp-for="description">Description</label>
+                                    <textarea asp-for="description" class="form-control"></textarea>
+                                    <span asp-validation-for="description" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-check">
+                                @{ if (Model.is_active == 1)
+                                    {
+                                        <input type="checkbox" class="form-check-input" id="is_active" name="is_active" checked> }
+                                    else
+                                    {
+                                        <input type="checkbox" class="form-check-input" id="is_active" name="is_active"> } }
+                                <label class="form-check-label" for="is_active">Active</label>
+                            </div>
+
+
+                            <div class="form-group row" hidden>
+                                <div class="col-sm-4">
+                                    <input type="datetime" name="created_at" id="created_at" class="form-control" value="@Model.created_at" />
+                                </div>
+                            </div> 
+
+                            <div class="form-group">
+                                <div class="col-sm-offset-5 col-sm-2 m-t-15">
+                                    <button type="submit" class="btn btn-primary w-lg" value="Edit">
+                                        Update
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+@section tambahan_js{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script> 
+        $('#is_active').on('change', function () {
+            this.value = this.checked ? 1 : 0;
+            // alert(this.value);
+        }).change();
+    </script>
+}
+
